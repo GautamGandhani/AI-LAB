@@ -1,0 +1,70 @@
+def unify(t1, t2, subst):
+    
+    if t1 == t2:
+        return subst  
+
+    elif is_variable(t1):
+        return unify_variable(t1, t2, subst)
+
+    elif is_variable(t2):
+        return unify_variable(t2, t1, subst)
+
+    elif is_function(t1) and is_function(t2):
+        func1, args1 = t1
+        func2, args2 = t2
+        if func1 != func2:
+            return 'failure'
+        for arg1, arg2 in zip(args1, args2):
+            subst = unify(arg1, arg2, subst)
+            if subst == 'failure':
+                return 'failure'
+        return subst
+
+    else:
+        return 'failure'
+
+
+def unify_variable(var, term, subst):
+    
+    if var in subst:
+        return unify(subst[var], term, subst)
+    
+    if is_variable(term) and term in subst:
+        return unify(var, subst[term], subst)
+    
+    if occurs_check(var, term):
+        return 'failure'
+    
+    subst[var] = term
+    return subst
+
+
+def occurs_check(var, term):
+    if var == term:
+        return True
+    elif is_function(term):
+        _, args = term
+        return any(occurs_check(var, arg) for arg in args)
+    return False
+
+
+def is_variable(term):
+
+    return isinstance(term, str) and term.islower()
+
+
+def is_function(term):
+    return isinstance(term, tuple) and len(term) == 2  
+
+
+term1 = ('f', ['X', 'a'])
+term2 = ('f', ['b', 'c'])
+subst = {}
+result = unify(term1, term2, subst)
+print("Substitution:", result)
+
+term1 = 'X'
+term2 = ('f', ['X'])
+subst = {}
+result = unify(term1, term2, subst)
+print("Substitution:", result)  
