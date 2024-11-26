@@ -1,9 +1,9 @@
 class KnowledgeBase:
     def __init__(self):
-        self.american = set()  # Holds American citizens
-        self.hostile = set()   # Holds hostile countries
-        self.sold = set()      # Holds sales of weapons (weapon, seller, buyer)
-        self.criminal = set()  # Holds criminals
+        self.american = set() 
+        self.hostile = set()  
+        self.sold = set()     
+        self.criminal = set() 
     
     def add_american(self, person):
         self.american.add(person)
